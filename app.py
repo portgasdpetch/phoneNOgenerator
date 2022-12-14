@@ -12,10 +12,10 @@ requiredNumber = Label(root,text="เลขที่ต้องการ(คั
 quantity = Label(root,text="จำนวนเบอร์ที่ต้องการสร้าง :",font=20).place(x=160,y=110)
 numberPerCSV = Label(root,text="จำนวนเบอร์ต่อไฟล์ CSV :",font=20).place(x=160,y=210)
 
-requiredNumberTxt=IntVar()
+requiredNumberTxt=StringVar(value="0")
 quantityTxt=IntVar()
 numberPerCSVTxt=IntVar()
-prefixNumberTxt=StringVar()
+prefixNumberTxt=StringVar(value="060")
 
 combo= ttk.Combobox(textvariable=prefixNumberTxt)
 combo.place(x=95,y=10,width=60)
@@ -33,23 +33,69 @@ def is_int(a,b,c):
         print("Not an integer")
         return False
 
-def exPort():
-    global p 
-    p = prefixNumberTxt.get()
-    if (p==None):
+def Prefix():
+    global prefix
+    prefix = prefixNumberTxt.get()
+    if (prefix==None):
         return ""
-    else:
-        pass
 
-def csvDemo1(c):
-    exPort()
+def RequiredNumber():
+    requiredNumber = requiredNumberTextBox.get()
+    if (requiredNumber==None):
+        return ""
+    StrRn = str(requiredNumber)
+    global splitedRn
+    splitedRn = StrRn.split()
+    return splitedRn
+
+def NumberQuantity():
+    global numberQuantity
+    numberQuantity = quantityTextBox.get()
+    return numberQuantity
+
+def NumberPerCSV():
+    global numberPerCSV
+    numberPerCSV = numberPerCSVTextBox.get() 
+    return numberPerCSV
+
+def CsvDemo1():
+    Prefix()
+    RequiredNumber()
+    NumberQuantity()
+    NumberPerCSV()
+    ShuffleNumber(prefix,splitedRn,numberQuantity)
     with open("generatedNumber.csv","w", newline="", encoding="utf8") as f:
         fw = csv.writer(f)
         fw.writerow(["First Name","Last Name","Prefix","Phone Number"])
         i = 0
-        while i<(len(c)-2):
-            fw.writerow([c[i],c[i+1],"",c[i+2]])
+        while i<(len(y)-2):
+            fw.writerow([y[i],y[i+1],"",y[i+2]])
             i += 3
+
+def ShuffleNumber(p,rn,nq):
+    w = tuple(range(10000000))
+    x = random.sample(w,len(w))
+    y = []
+    #for each X
+    for i in x:
+        #format number to at least 7 digits(in case of 0 leads)
+        formattedList = format(i,"07d")
+        #check to get only if required numbers are all in formattedList
+        d = all(item in formattedList for item in rn)
+        if(d):
+            #add prefix and formatted + required numbers to make numbers
+            y.append(p+formattedList)
+        if(len(y)==nq):
+            break
+    generatedQuantity = len(y)
+    return generatedQuantity
+
+def MaxNumberQuantityButton():
+    global maxNumberQuantityButton
+    Prefix()
+    RequiredNumber()
+    ShuffleNumber(prefix,splitedRn)
+
 
 requiredNumberTextBox=Entry(root,textvariable=requiredNumberTxt,width=22).place(x=355,y=15)
 quantityTextBox=Entry(root,textvariable=quantityTxt,width=17).place(x=335,y=115)
@@ -57,7 +103,7 @@ numberPerCSVTextBox=Entry(root,textvariable=numberPerCSVTxt,width=17).place(x=33
 
 maxQuantityButton = Button(root,text="MAX",width=5).place(x=450,y=110)
 maxNumberPerCSVButton = Button(root,text="MAX",width=5).place(x=450,y=210)
-exportButton = Button(root,text="Export to CSV",width=16,height=3,command=csvDemo1).place(x=350,y=260)
+exportButton = Button(root,text="Export to CSV",width=16,height=3,command=CsvDemo1).place(x=350,y=260)
 
 
 
@@ -73,49 +119,17 @@ root.mainloop()
 
 
 import random
-t = "59"
-u = ["41","59"]
+u = ["41","59","60"]
 v = "060"
-w = list(range(10000000))
+w = tuple(range(10000000))
 x = random.sample(w,len(w))
 y = []
+#for each X
 for i in x:
+    #format number to at least 7 digits(in case of 0 leads)
     formattedList = format(i,"07d")
-    k=0
-    while (k<len(u)):
-        if u[k] in formattedList:
-            if u[k] in formattedList:
-                y.append(v+formattedList)
-            else:
-                pass
-            k += 1
-        else:
-            pass
-print(y)
-print(len(y))
-csvDemo1(y)
-
-
-# a = range(0000000,10000000)
-# for i in a:
-#     # print("{:07d}".format(i))
-#     print(format(i,"07d"))
-    # csvDemo1(format(i,"07d"))
-
-# from numpy import random
-# import numpy as np
-# a = np.arange(1000000)
-# b = random.permutation(a)
-# # d = np.array([])
-# for c in b:
-#     formattedList = format(c,"07d")
-#     d = np.append(formattedList,formattedList)
-# print(d)
-
-
-
-# x = random.shuffle(list(w))
-# print(x)
-
-# for i in x:
-#     print(format(i,"07d"))
+    #check to get only if required numbers are all in formattedList
+    d = all(item in formattedList for item in u)
+    if(d):
+        #add prefix and formatted + required numbers to make numbers
+        y.append(v+formattedList)
