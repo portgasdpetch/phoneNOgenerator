@@ -91,11 +91,16 @@ def ShuffleNumber(p,rn,nq):
     return generatedQuantity
 
 def MaxNumberQuantityButton():
-    global maxNumberQuantityButton
     Prefix()
     RequiredNumber()
-    ShuffleNumber(prefix,splitedRn)
+    generatedQuantity = ShuffleNumber(prefix,splitedRn,numberQuantity)
+    quantityTxt.set(generatedQuantity)
 
+def maxNumberPerCsvButton():
+    Prefix()
+    RequiredNumber()
+    generatedQuantity = ShuffleNumber(prefix,splitedRn,numberQuantity)
+    numberPerCSVTxt.set(generatedQuantity)
 
 requiredNumberTextBox=Entry(root,textvariable=requiredNumberTxt,width=22).place(x=355,y=15)
 quantityTextBox=Entry(root,textvariable=quantityTxt,width=17).place(x=335,y=115)
