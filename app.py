@@ -40,7 +40,7 @@ def Prefix():
         return ""
 
 def RequiredNumber():
-    requiredNumber = requiredNumberTextBox.get()
+    requiredNumber = requiredNumberTxt.get()
     if (requiredNumber==None):
         return ""
     StrRn = str(requiredNumber)
@@ -50,12 +50,12 @@ def RequiredNumber():
 
 def NumberQuantity():
     global numberQuantity
-    numberQuantity = quantityTextBox.get()
+    numberQuantity = quantityTxt.get()
     return numberQuantity
 
 def NumberPerCSV():
     global numberPerCSV
-    numberPerCSV = numberPerCSVTextBox.get() 
+    numberPerCSV = numberPerCSVTxt.get() 
     return numberPerCSV
 
 def CsvDemo1():
@@ -75,6 +75,7 @@ def CsvDemo1():
 def ShuffleNumber(p,rn,nq):
     w = tuple(range(10000000))
     x = random.sample(w,len(w))
+    global y
     y = []
     #for each X
     for i in x:
@@ -84,16 +85,30 @@ def ShuffleNumber(p,rn,nq):
         d = all(item in formattedList for item in rn)
         if(d):
             #add prefix and formatted + required numbers to make numbers
-            y.append(p+formattedList)
-        if(len(y)==nq):
+            y.append(p+formattedList)     
+        elif(len(y)==nq):
             break
+    
+
+def shuffleNumberMax(p):
+    w = tuple(range(10000000))
+    x = random.sample(w,len(w))
+    global y
+    y = []
+    #for each X
+    for i in x:
+        #format number to at least 7 digits(in case of 0 leads)
+        formattedList = format(i,"07d")
+        y.append(formattedList)
+    global generatedQuantity
     generatedQuantity = len(y)
-    return generatedQuantity
+    return generatedQuantity, y
 
 def MaxNumberQuantityButton():
     Prefix()
     RequiredNumber()
-    generatedQuantity = ShuffleNumber(prefix,splitedRn,numberQuantity)
+    shuffleNumberMax(prefix)
+    print(generatedQuantity)
     quantityTxt.set(generatedQuantity)
 
 def maxNumberPerCsvButton():
@@ -106,8 +121,8 @@ requiredNumberTextBox=Entry(root,textvariable=requiredNumberTxt,width=22).place(
 quantityTextBox=Entry(root,textvariable=quantityTxt,width=17).place(x=335,y=115)
 numberPerCSVTextBox=Entry(root,textvariable=numberPerCSVTxt,width=17).place(x=335,y=215)
 
-maxQuantityButton = Button(root,text="MAX",width=5).place(x=450,y=110)
-maxNumberPerCSVButton = Button(root,text="MAX",width=5).place(x=450,y=210)
+maxQuantityButton = Button(root,text="MAX",width=5,command=MaxNumberQuantityButton).place(x=450,y=110)
+maxNumberPerCSVButton = Button(root,text="MAX",width=5,command=maxNumberPerCsvButton).place(x=450,y=210)
 exportButton = Button(root,text="Export to CSV",width=16,height=3,command=CsvDemo1).place(x=350,y=260)
 
 
